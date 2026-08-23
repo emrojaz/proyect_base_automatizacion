@@ -75,3 +75,29 @@ Feature: Eliminar producto del carrito   - Andrea Escurra
     And hago doble clic sobre el boton eliminar del item ya removido
     Then el sistema no muestra errores
     And el carrito permanece vacio con total 0
+
+Feature: Aplicar cupón de descuento   - Emilio Rojas
+
+  Como cliente del e-commerce
+  quiero utilizar cupones de descuento
+  para reducir el monto total de mi compra
+
+  Scenario: Aplicar un cupón de descuento válido (happy path)   - Emilio Rojas
+    Given el carrito tiene productos por valor de 200000
+    And el usuario posee un cupón de descuento válido del 10%
+    When aplica el cupón de descuento
+    Then el descuento se aplica correctamente
+    And el total del carrito se actualiza con el descuento
+
+  Scenario: Intentar aplicar un cupón de descuento vencido (caso negativo)   - Emilio Rojas
+    Given el carrito tiene productos por valor de 200000
+    And el usuario posee un cupón de descuento vencido
+    When aplica el cupón de descuento
+    Then el sistema muestra el mensaje "El cupón ha expirado"
+    And el total del carrito no se modifica
+
+  Scenario: Aplicar un cupón cuando el monto es exactamente el mínimo requerido (edge case)   - Emilio Rojas
+    Given el carrito tiene productos por valor de 300000
+    And el usuario posee un cupón de descuento válido
+    And el cupón requiere una compra mínima de 300000
+    When aplica el descuento
